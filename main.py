@@ -8,7 +8,7 @@ from telegram.ext import Updater, ConversationHandler, CommandHandler, MessageHa
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-GENDER, AGE, REGION = range(3)
+GENDER, AGE, REGION, BEGINNING, ANSWER = range(5)
 
 fl_dict = {'f': True}
 
@@ -29,7 +29,7 @@ def start(update, context):
     reply_keyboard = [['Mужчина', 'Женщина', 'Другое']]
     update.message.reply_text(
         'Привет, меня зовут Арханвей. Я бот который будет играть\n'
-        'с тобой в игру. Ты погрузишься и средневековье, где\n'
+        'с тобой в игру. Ты погрузишься в средневековье, где\n'
         'будут замки, рыцари и драконы. Но для начала\n'
         'я задам тебе пару вопросов.\n\n'
         'Какой у тебя пол?',
@@ -85,9 +85,32 @@ def region(update, context):
                     (last_id[0] + 1, dict_user['name'], dict_user["gender"], dict_user["age"], dict_user["region"]))
         con.commit()
         logger.info(f'{user.first_name} добавлен в базу данных.')
-    update.message.reply_text('Хорошо приступим к игре).')
+    reply_keyboard = [['Приступим!']]
+    update.message.reply_text('Хорошо приступим к игре).', reply_markup=ReplyKeyboardMarkup(
+        reply_keyboard, one_time_keyboard=True,
+        input_field_placeholder='Нажмите чтобы начать'))
+    return BEGINNING
 
 
+def beginning_of_story(update, contest):
+    user = update.message.from_user
+    update.message.reply_text('Однажды в средневековье в бедной крестьянской семье родился ребёнок!')
+    update.message.reply_text(f'Назвали его {user.first_name}.')
+    reply_keyboard = [['Плакать в колыбели', 'Лежать молча']]
+    update.message.reply_text('Кроме вас в семье было много детей. И чтобы выжить вам нужно выделятся среди остальных.',
+    reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True,
+        input_field_placeholder='Что вы сделаете?'))
+    return ANSWER
+
+
+def next(update, contest):
+    if update.message.text == 'Плакать в колыбели':
+        update.message.reply_text('Родители заметили вас и начали проявлять к вам заботу!')
+    elif update.message.text == 'Лежать молча':
+        update.message.reply_text('Вы не привлекли внимание родителей поэтому они продолжили работу по дому...')
+    update.message.reply_text('Проходит какое-то время и вы уже обедаете за столом вместе со всеми.',
+                              reply_markup=ReplyKeyboardRemove())
+    update.message.reply_text('Так как вы живёте в очень большой семье еды вам достаётся не очень много.')
 
 
 def cancel(update, context):
@@ -109,7 +132,9 @@ def main():
         entry_points=[CommandHandler('start', start)],
         states={GENDER: [MessageHandler(Filters.regex('^(Mужчина|Женщина|Другое)$'), gender)],
                 AGE: [MessageHandler(Filters.text, age)],
-                REGION: [MessageHandler(Filters.text, region)]
+                REGION: [MessageHandler(Filters.text, region)],
+                BEGINNING: [MessageHandler(Filters.text, beginning_of_story)],
+                ANSWER: [MessageHandler(Filters.regex('^(Плакать в колыбели|Лежать молча)$'), next)]
                 },
         fallbacks=[CommandHandler('cancel', cancel)]
 
