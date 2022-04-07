@@ -1,8 +1,6 @@
 import logging
 import random
 import sqlite3
-
-# t.me/yl_game_bot
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
 from telegram.ext import Updater, ConversationHandler, CommandHandler, MessageHandler, Filters
 
@@ -10,21 +8,23 @@ from telegram.ext import Updater, ConversationHandler, CommandHandler, MessageHa
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-GENDER, AGE, REGION, INFO_AND_START = range(4)
+GENDER, AGE, REGION = range(3)
 
-FLAG = True
-CONNECTIONS = sqlite3.connect('bot_db')
+fl_dict = {'f': True}
 
 dict_user = {'name': '', 'gender': '', 'age': '', 'region': ''}
 
 
 def start(update, context):
-    cur = CONNECTIONS.cursor()
+    con = sqlite3.connect('bot.db')
+    cur = con.cursor()
     user = update.message.from_user
     logger.info(f'Пользователь {user.first_name} начал беседу с ботом.')
-    names = cur.execute(f'''SELECT name FROM users_tb WHERE name = {user.first_name}''').fetchone()
-    if names[0][0]:
-        FLAG = False
+    names = cur.execute('SELECT name FROM users_tb WHERE name=?', (user.first_name,)).fetchall()
+    if names:
+        pass
+    else:
+        fl_dict['f'] = False
     dict_user['name'] = user.first_name
     reply_keyboard = [['Mужчина', 'Женщина', 'Другое']]
     update.message.reply_text(
@@ -69,28 +69,25 @@ def region(update, context):
     user = update.message.from_user
     logger.info(f'{user.first_name} написал что он из {update.message.text}.')
     dict_user['region'] = update.message.text
-    update.message.reply_text(
-        'ок'
-    )
-    return ConversationHandler.END
-
-
-def info_and_start(update, context):
-    cur = CONNECTIONS.cursor()
+    con = sqlite3.connect('bot.db')
+    cur = con.cursor()
     last_id = cur.execute("""SELECT MAX(id) FROM users_tb""").fetchone()
-    user = update.message.from_user
-    if FLAG:
-        cur.execute(f'''INSERT INTO tb_order VALUES({last_id + 1}, {dict_user["name"]}, 
-            {dict_user["gender"]}, {dict_user["age"]}, {dict_user["region"]})''')
-        CONNECTIONS.commit()
+    if fl_dict['f']:
+        cur.execute('UPDATE users_tb SET gender = ? WHERE name = ?', (dict_user["gender"], dict_user['name']))
+        con.commit()
+        cur.execute('UPDATE users_tb SET age = ? WHERE name = ?', (dict_user["age"], dict_user['name']))
+        con.commit()
+        cur.execute('UPDATE users_tb SET region = ? WHERE name = ?', (dict_user["region"], dict_user['name']))
+        con.commit()
+        logger.info(f'Информация о {user.first_name} обновлена.')
     else:
-        cur.execute(f'''UPDATE users_tb SET gender = {dict_user["gender"]}''')
-        CONNECTIONS.commit()
-        cur.execute(f'''UPDATE users_tb SET age = {dict_user["age"]}''')
-        CONNECTIONS.commit()
-        cur.execute(f'''UPDATE users_tb SET region = {dict_user["region"]}''')
-        CONNECTIONS.commit()
-    update.message.reply_text('Хорошо приступим к игре)')
+        cur.execute('INSERT INTO users_tb VALUES(?,?,?,?,?)',
+                    (last_id[0] + 1, dict_user['name'], dict_user["gender"], dict_user["age"], dict_user["region"]))
+        con.commit()
+        logger.info(f'{user.first_name} добавлен в базу данных.')
+    update.message.reply_text('Хорошо приступим к игре).')
+
+
 
 
 def cancel(update, context):
@@ -105,7 +102,7 @@ def cancel(update, context):
 
 def main():
     """!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"""
-    updater = Updater('5294956202:AAGngiDjlf7FdpeQqkYgn6eZXhuIdpetqJM')
+    updater = Updater('5193592133:AAGbqN6WaAmB7GE9botLB1wki32WMH689w8')
     dp = updater.dispatcher
 
     conv_handler = ConversationHandler(
