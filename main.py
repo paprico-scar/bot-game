@@ -1,5 +1,6 @@
 import logging
 import sqlite3
+import pretty_errors
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
 from telegram.ext import Updater, ConversationHandler, CommandHandler, MessageHandler, Filters
 
@@ -7,7 +8,7 @@ from telegram.ext import Updater, ConversationHandler, CommandHandler, MessageHa
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-GEN, AGE, REG, A, B, C, D, E, F, G, H = range(11)
+GEN, AGE, REG, A, B, C, D, E, F, G, H, I = range(12)
 
 user_game_info = {'f': True, 'hp': 3}
 
@@ -156,7 +157,7 @@ def next(update, contest):
         update.message.reply_text('Вы вы сказали странное слово но никто вас не понял.')
         logger.info(f'{user.first_name} выбрал "Придумать своё слово".')
     elif update.message.text == 'Повторить за отцом':
-        update.message.reply_text('Услышав это, отец в ярости поколотил вас.')
+        update.message.reply_text('Услышав это, отец в ярости поколотил вас.(у вас отнимается одно хп)')
         user_game_info['hp'] -= 1
         logger.info(f'{user.first_name} выбрал "Повторить за отцом".')
     update.message.reply_text('Проходит какое-то время и вы уже обедаете за столом вместе со всеми.')
@@ -206,19 +207,42 @@ def igra_v_pryatki(update, context):
     if update.message.text == 'Взятся за работу':
         logger.info(f'{user.first_name} выбрал "Взятся за работу".')
         update.message.reply_text(
-            'Вы работали так усепрдно и сломаои плуг. Отец был в ярости! Он бил вас до потери сознания.')
+            'Вы работали так усепрдно и сломаои плуг. Отец был в ярости! Он бил вас до /'
+            'потери сознания.(у вас отнимается два хп)')
         user_game_info['hp'] -= 2
     elif update.message.text == 'Отлынивать':
         logger.info(f'{user.first_name} выбрал "Отлынивать".')
-        update.message.reply_text('Рука бстро схватила вашего брата и утащила его из окна. Больше его никто не видел.')
+        update.message.reply_text('Вы отлыниваете от работы. Ваши родные раздрожены этим фактом.')
     if user_game_info['hp'] <= 0:
         reply_keyboard = [['Продолжить']]
         update.message.reply_text('Вы умерли и игра начнется заново.',
                                   reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
         logger.info(f'{user.first_name} умер.')
         return A
-    reply_keyboard = [['Играт в прятки', 'Играть в салки']]
+    reply_keyboard = [['Играть в прятки', 'Играть в салки']]
     update.message.reply_text('Вы подросли и кже играете с ребятней.',
+                              reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    return I
+
+
+def pole_2(update, context):
+    user = update.message.from_user
+    if update.message.text == 'Играть в прятки':
+        logger.info(f'{user.first_name} выбрал "Играть в прятки"')
+        update.message.reply_text(
+            'Вы спрятались настолько хорошо что вас нашли только через три дня.(у вас отнимается одно хп)')
+        user_game_info['hp'] -= 1
+    elif update.message.text == 'Играть в салки':
+        logger.info(f'{user.first_name} выбрал "Играть в салки"')
+        update.message.reply_text('Вы очень изворотливы поэтому вы никогда не водили в игре.')
+    if user_game_info['hp'] <= 0:
+        reply_keyboard = [['Продолжить']]
+        update.message.reply_text('Вы умерли и игра начнется заново.',
+                                  reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+        logger.info(f'{user.first_name} умер.')
+        return A
+    reply_keyboard = [['Дёрныть коня за хвост', "Взяться за плуг"]]
+    update.message.reply_text('Отец поймал вас и отправил работатль на поле, но пахат вас страшно лень.',
                               reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
 
 
@@ -249,7 +273,8 @@ def main():
                 E: [MessageHandler(Filters.text, next)],
                 F: [MessageHandler(Filters.text, night_in_bad)],
                 G: [MessageHandler(Filters.text, pole)],
-                H: [MessageHandler(Filters.text, igra_v_pryatki)]
+                H: [MessageHandler(Filters.text, igra_v_pryatki)],
+                I: [MessageHandler(Filters.text, pole_2)]
                 },
         fallbacks=[CommandHandler('cancel', cancel)]
 
