@@ -8,7 +8,7 @@ from telegram.ext import Updater, ConversationHandler, CommandHandler, MessageHa
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-GEN, AGE, REG, A, B, C, D, E, F, G, H, I = range(12)
+GEN, AGE, REG, A, B, C, D, E, F, G, H, I, J, K, L, M = range(16)
 
 user_game_info = {'f': True, 'hp': 3}
 
@@ -241,17 +241,76 @@ def pole_2(update, context):
                                   reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
         logger.info(f'{user.first_name} умер.')
         return A
-    reply_keyboard = [['Дёрныть коня за хвост', "Взяться за плуг"]]
+    reply_keyboard = [['Дёрнуть коня за хвост', "Взяться за плуг"]]
     update.message.reply_text('Отец поймал вас и отправил работатль на поле, но пахат вас страшно лень.',
                               reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    return J
+
+
+def chel(update, context):
+    user = update.message.from_user
+    if update.message.text == 'Дёрныть коня за хвост':
+        logger.info(f'{user.first_name} выбрал "Дёрныть коня за хвост"')
+        update.message.reply_text(
+            'Конь вас хорошеньео легнул.(у вас отнимается два хп)')
+        user_game_info['hp'] -= 2
+    elif update.message.text == 'Взяться за плуг':
+        logger.info(f'{user.first_name} выбрал "Взяться за плуг"')
+        update.message.reply_text('Вы проработали так весь день. Перспектива работать так всю вам не понравилась')
+    if user_game_info['hp'] <= 0:
+        reply_keyboard = [['Продолжить']]
+        update.message.reply_text('Вы умерли и игра начнется заново.',
+                                  reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+        logger.info(f'{user.first_name} умер.')
+        return A
+    reply_keyboard = [['Не обращать внимания', 'Россказать взырослым']]
+    update.message.reply_text('Работая на поле, вы замечаете странного целовека который смотрит за вами.',
+                              reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    return K
+
+
+def scotina(update, context):
+    user = update.message.from_user
+    if update.message.text == 'Не обращать внимания':
+        logger.info(f'{user.first_name} выбрал "Не обращать внимания"')
+        update.message.reply_text('Вскоре ваше поле разграбили у вашей семьи упал доход.')
+    elif update.message.text == 'Россказать взырослым':
+        logger.info(f'{user.first_name} выбрал "Россказать взырослым"')
+        update.message.reply_text(
+            'Вы рассказываете об этом человеке взрослым и потом вы узнаете что это был местый вор. Его завтра повесят.')
+    reply_keyboard = [['Пускай гуляют', 'Махать палкой чтобы шла обратно']]
+    update.message.reply_text('Ваша ленивая скотина зашла на землю, принадлежащую Лорду',
+                              reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    return L
+
+
+def batya_i_voyna(update, context):
+    user = update.message.from_user
+    if update.message.text == 'Пускай гуляют':
+        logger.info(f'{user.first_name} выбрал "Пускай гуляют"')
+        update.message.reply_text('Вашу скоину заметил Лордю. Вашего отца оштрафовали. Теперь ваша семья нищая.')
+    elif update.message.text == 'Махать палкой чтобы шла обратно':
+        logger.info(f'{user.first_name} выбрал "Махать палкой чтобы шла обратно"')
+        update.message.reply_text(
+            'Ваша скотина лениво пошла помяв вас при этом. Зато вы не потревожили Лорда.(у вас отнимается одно хп)')
+        user_game_info['hp'] -= 1
+    if user_game_info['hp'] <= 0:
+        reply_keyboard = [['Продолжить']]
+        update.message.reply_text('Вы умерли и игра начнется заново.',
+                                  reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+        logger.info(f'{user.first_name} умер.')
+        return A
+    reply_keyboard = [['Идти куда глаза глядят', 'Шастаться по деревне']]
+    update.message.reply_text('Лорд призвал вашего отца в армию. Платить оброк нечем.',
+                              reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    return M
 
 
 def cancel(update, context):
     user = update.message.from_user
     logger.info(f"Пользователь {user.first_name} закончил беседу с ботом.")
     update.message.reply_text(
-        'Пока! Надеюсь мы скоро встретимся.', reply_markup=ReplyKeyboardRemove()
-    )
+        'Пока! Надеюсь мы скоро встретимся.')
 
     return ConversationHandler.END
 
@@ -274,7 +333,11 @@ def main():
                 F: [MessageHandler(Filters.text, night_in_bad)],
                 G: [MessageHandler(Filters.text, pole)],
                 H: [MessageHandler(Filters.text, igra_v_pryatki)],
-                I: [MessageHandler(Filters.text, pole_2)]
+                I: [MessageHandler(Filters.text, pole_2)],
+                J: [MessageHandler(Filters.text, chel)],
+                K: [MessageHandler(Filters.text, scotina)],
+                L: [MessageHandler(Filters.text, batya_i_voyna)],
+                M: ['''Напиши дальше историю я пока отдыхаю''']
                 },
         fallbacks=[CommandHandler('cancel', cancel)]
 
