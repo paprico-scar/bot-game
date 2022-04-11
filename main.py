@@ -8,7 +8,7 @@ from telegram.ext import Updater, ConversationHandler, CommandHandler, MessageHa
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-GEN, AGE, REG, A, B, C, D, E, F, G, H, I, J, K, L, M = range(16)
+GEN, AGE, REG, A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X= range(27)
 
 user_game_info = {'f': True, 'hp': 3}
 
@@ -92,7 +92,7 @@ def region(update, context):
     return A
 
 
-def beginning_of_story(update, contest):
+def beginning_of_story(update, context):
     user_game_info['hp'] = 3
     user = update.message.from_user
     logger.info(f'{user.first_name} начал историю.')
@@ -105,7 +105,7 @@ def beginning_of_story(update, contest):
     return B
 
 
-def polzat(update, contest):
+def polzat(update, context):
     user = update.message.from_user
     if update.message.text == 'Плакать в колыбели':
         update.message.reply_text('Родители заметили вас и начали проявлять к вам заботу!')
@@ -115,19 +115,19 @@ def polzat(update, contest):
         logger.info(f'{user.first_name} выбрал "Лежать молча".')
     reply_keyboard = [['Ползать', "Сидеть в углу"]]
     update.message.reply_text(
-        'Вы хотите ползать по дому и пробовать всё на вкус но люди не оборащают на вас внимания и е смотрят под ноги.',
+        'Вы хотите ползать по дому и пробовать всё на вкус, но люди не оборащают на вас внимания и не смотрят под ноги.',
         reply_markup=ReplyKeyboardMarkup(
             reply_keyboard, one_time_keyboard=True))
     return C
 
 
-def govor(update, contest):
+def govor(update, context):
     user = update.message.from_user
     if update.message.text == 'Ползать':
         update.message.reply_text('Вы ловко ползаете и уворачиваетсь от ног.')
         logger.info(f'{user.first_name} выбрал "Ползать".')
     elif update.message.text == 'Сидеть в углу':
-        update.message.reply_text('Вы отсиделиь в углу и не узналми ничего нового.')
+        update.message.reply_text('Вы отсиделись в углу и не узнали ничего нового.')
         logger.info(f'{user.first_name} выбрал "Сидеть в углу".')
     reply_keyboard = [['Научиться ходить', "Научиться говорить"]]
     update.message.reply_text('Вы задумались о будущем и вы решили чему-то научиться.',
@@ -136,7 +136,7 @@ def govor(update, contest):
     return D
 
 
-def ploh_slovo(update, contest):
+def ploh_slovo(update, context):
     user = update.message.from_user
     if update.message.text == 'Научиться ходить':
         update.message.reply_text('Вы начали ходить теперь у вас больше шансов умереть.')
@@ -145,16 +145,16 @@ def ploh_slovo(update, contest):
         update.message.reply_text('Вы заговорили посреди ночи и тем самым напугали родителей.')
         logger.info(f'{user.first_name} выбрал "Научиться говорить".')
     reply_keyboard = [['Придумать своё слово', "Повторить за отцом"]]
-    update.message.reply_text('Вы услышали как вапш отекц произнес нехорошее слово.',
+    update.message.reply_text('Вы услышали как ваш отец произнёс нехорошее слово.',
                               reply_markup=ReplyKeyboardMarkup(
                                   reply_keyboard, one_time_keyboard=True))
     return E
 
 
-def next(update, contest):
+def next(update, context):
     user = update.message.from_user
     if update.message.text == 'Придумать своё слово':
-        update.message.reply_text('Вы вы сказали странное слово но никто вас не понял.')
+        update.message.reply_text('Вы вы сказали странное слово, но никто вас не понял.')
         logger.info(f'{user.first_name} выбрал "Придумать своё слово".')
     elif update.message.text == 'Повторить за отцом':
         update.message.reply_text('Услышав это, отец в ярости поколотил вас.(у вас отнимается одно хп)')
@@ -171,7 +171,7 @@ def next(update, contest):
 def night_in_bad(update, context):
     user = update.message.from_user
     if update.message.text == 'Съесть свою порцию':
-        update.message.reply_text('Вы не доедаете у сожалению вы плохо развиваетесь.(у вас отнимается одно хп)')
+        update.message.reply_text('Вы не доедаете, к сожалению вы плохо развиваетесь.(у вас отнимается одно хп)')
         user_game_info['hp'] -= 1
         logger.info(f'{user.first_name} выбрал "Съесть свою порцию" и теряет одно хп))))).')
     elif update.message.text == 'Отобрать у брата':
@@ -194,7 +194,7 @@ def pole(update, context):
         update.message.reply_text('Присмотревшись, вы поняли что это обычная ветка.')
     elif update.message.text == 'Спрятаться под одеяло':
         logger.info(f'{user.first_name} выбрал "Спрятаться под одеяло".')
-        update.message.reply_text('Рука бстро схватила вашего брата и утащила его из окна. Больше его никто не видел.')
+        update.message.reply_text('Рука быстро схватила вашего брата и утащила его из окна. Больше его никто не видел.')
     reply_keyboard = [['Взятся за работу', 'Отлынивать']]
     update.message.reply_text('Как только вам исполнилось 4 года вас отправили работать на поле',
                               reply_markup=ReplyKeyboardMarkup(
@@ -207,7 +207,7 @@ def igra_v_pryatki(update, context):
     if update.message.text == 'Взятся за работу':
         logger.info(f'{user.first_name} выбрал "Взятся за работу".')
         update.message.reply_text(
-            'Вы работали так усепрдно и сломаои плуг. Отец был в ярости! Он бил вас до /'
+            'Вы работали так усепрдно и сломали плуг. Отец был в ярости! Он бил вас до /'
             'потери сознания.(у вас отнимается два хп)')
         user_game_info['hp'] -= 2
     elif update.message.text == 'Отлынивать':
@@ -220,7 +220,7 @@ def igra_v_pryatki(update, context):
         logger.info(f'{user.first_name} умер.')
         return A
     reply_keyboard = [['Играть в прятки', 'Играть в салки']]
-    update.message.reply_text('Вы подросли и кже играете с ребятней.',
+    update.message.reply_text('Вы подросли и уже играете с ребятней.',
                               reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
     return I
 
@@ -230,7 +230,7 @@ def pole_2(update, context):
     if update.message.text == 'Играть в прятки':
         logger.info(f'{user.first_name} выбрал "Играть в прятки"')
         update.message.reply_text(
-            'Вы спрятались настолько хорошо что вас нашли только через три дня.(у вас отнимается одно хп)')
+            'Вы спрятались настолько хорошо, что вас нашли только через три дня.(у вас отнимается одно хп)')
         user_game_info['hp'] -= 1
     elif update.message.text == 'Играть в салки':
         logger.info(f'{user.first_name} выбрал "Играть в салки"')
@@ -242,29 +242,29 @@ def pole_2(update, context):
         logger.info(f'{user.first_name} умер.')
         return A
     reply_keyboard = [['Дёрнуть коня за хвост', "Взяться за плуг"]]
-    update.message.reply_text('Отец поймал вас и отправил работатль на поле, но пахат вас страшно лень.',
+    update.message.reply_text('Отец поймал вас и отправил работатль на поле, но пахать вам страшно лень.',
                               reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
     return J
 
 
 def chel(update, context):
     user = update.message.from_user
-    if update.message.text == 'Дёрныть коня за хвост':
-        logger.info(f'{user.first_name} выбрал "Дёрныть коня за хвост"')
+    if update.message.text == 'Дёрнуть коня за хвост':
+        logger.info(f'{user.first_name} выбрал "Дёрнуть коня за хвост"')
         update.message.reply_text(
-            'Конь вас хорошеньео легнул.(у вас отнимается два хп)')
+            'Конь вас хорошенько легнул.(у вас отнимается два хп)')
         user_game_info['hp'] -= 2
     elif update.message.text == 'Взяться за плуг':
         logger.info(f'{user.first_name} выбрал "Взяться за плуг"')
-        update.message.reply_text('Вы проработали так весь день. Перспектива работать так всю вам не понравилась')
+        update.message.reply_text('Вы проработали так весь день. Перспектива работать так всю вам не понравилась.')
     if user_game_info['hp'] <= 0:
         reply_keyboard = [['Продолжить']]
         update.message.reply_text('Вы умерли и игра начнется заново.',
                                   reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
         logger.info(f'{user.first_name} умер.')
         return A
-    reply_keyboard = [['Не обращать внимания', 'Россказать взырослым']]
-    update.message.reply_text('Работая на поле, вы замечаете странного целовека который смотрит за вами.',
+    reply_keyboard = [['Не обращать внимания', 'Рассказать взырослым']]
+    update.message.reply_text('Работая на поле, вы замечаете странного человека, который смотрит за вами.',
                               reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
     return K
 
@@ -274,12 +274,12 @@ def scotina(update, context):
     if update.message.text == 'Не обращать внимания':
         logger.info(f'{user.first_name} выбрал "Не обращать внимания"')
         update.message.reply_text('Вскоре ваше поле разграбили у вашей семьи упал доход.')
-    elif update.message.text == 'Россказать взырослым':
-        logger.info(f'{user.first_name} выбрал "Россказать взырослым"')
+    elif update.message.text == 'Рассказать взырослым':
+        logger.info(f'{user.first_name} выбрал "Рассказать взырослым"')
         update.message.reply_text(
-            'Вы рассказываете об этом человеке взрослым и потом вы узнаете что это был местый вор. Его завтра повесят.')
-    reply_keyboard = [['Пускай гуляют', 'Махать палкой чтобы шла обратно']]
-    update.message.reply_text('Ваша ленивая скотина зашла на землю, принадлежащую Лорду',
+            'Вы рассказываете об этом человеке взрослым и потом вы узнаёте, что это был местый вор. Его завтра повесят.')
+    reply_keyboard = [['Пускай гуляют', 'Махать палкой, чтобы шла обратно']]
+    update.message.reply_text('Ваша ленивая скотина зашла на землю, принадлежащую Лорду.',
                               reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
     return L
 
@@ -288,11 +288,11 @@ def batya_i_voyna(update, context):
     user = update.message.from_user
     if update.message.text == 'Пускай гуляют':
         logger.info(f'{user.first_name} выбрал "Пускай гуляют"')
-        update.message.reply_text('Вашу скоину заметил Лордю. Вашего отца оштрафовали. Теперь ваша семья нищая.')
+        update.message.reply_text('Вашу скотну заметил Лорд. Вашего отца оштрафовали. Теперь ваша семья нищая.')
     elif update.message.text == 'Махать палкой чтобы шла обратно':
         logger.info(f'{user.first_name} выбрал "Махать палкой чтобы шла обратно"')
         update.message.reply_text(
-            'Ваша скотина лениво пошла помяв вас при этом. Зато вы не потревожили Лорда.(у вас отнимается одно хп)')
+            'Ваша скотина лениво пошла, помяв вас при этом. Зато вы не потревожили Лорда.(у вас отнимается одно хп)')
         user_game_info['hp'] -= 1
     if user_game_info['hp'] <= 0:
         reply_keyboard = [['Продолжить']]
@@ -304,6 +304,180 @@ def batya_i_voyna(update, context):
     update.message.reply_text('Лорд призвал вашего отца в армию. Платить оброк нечем.',
                               reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
     return M
+
+
+def traktir(update, context):
+    user = update.message.from_user
+    if update.message.text == 'Идти куда глаза глядят':
+        logger.info(f'{user.first_name} выбрал "Идти куда глаза глядят"')
+        update.message.reply_text('Глаза глядели в сторону трактира.')
+    if update.message.text == 'Шастаться по деревне':
+        logger.info(f'{user.first_name} выбрал "Шастаться по деревне"')
+        update.message.reply_text('Вы ничего не делаете и ничего не происходит. Удивительно!')
+    reply_keyboard = [['Позвать стражников', 'Подойти ближе']]
+    update.message.reply_text('Вы оказались вечером у берега реки. На илистых камнях двигается сгорбленный силуэт.',
+                              reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    return N
+
+
+def utopec(update, context):
+    user = update.message.from_user
+    if update.message.text == 'Позвать стражников':
+        reply_keyboard = [['Ну ладно']]
+        logger.info(f'{user.first_name} выбрал "Позвать стражников"')
+        update.message.reply_text('Вы вернулись на это место со стражей, но силуэт исчез.',
+                                  reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    elif update.message.text == 'Подойти ближе':
+        logger.info(f'{user.first_name} выбрал "Подойти ближе"')
+        reply_keyboard = [['Очень жаль']]
+        update.message.reply_text(
+            'Подойдя ближе, вы распознали ожившего утопца и бросились бежать.\n'
+            'Ваша спина исполосована гнилыми когтями. (у вас отнимается одно хп)',
+            reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+        user_game_info['hp'] -= 1
+        if user_game_info['hp'] <= 0:
+            reply_keyboard = [['Продолжить']]
+            update.message.reply_text('Вы умерли и игра начнется заново.',
+                                      reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+            logger.info(f'{user.first_name} умер.')
+            return A
+    return O
+
+
+def v_traktire(update, context):
+    reply_keyboard = [['Заказать похлёбку', 'Спросить про подработку']]
+    update.message.reply_text('Вы дошли до старого трактира. \n'
+                              'Внутри грязно и откуда-то из полутьмы на вас вопросительно смотрит трактирщик.',
+                              reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    return P
+
+
+def food_or_work(update, context):
+    user = update.message.from_user
+    if update.message.text == 'Заказать похлёбку':
+        logger.info(f'{user.first_name} выбрал "Заказать похлёбку"')
+        update.message.reply_text('В еде были кости и сено. О чаевых не может быть и речи.(у вас прибавляется одно хп)')
+        user_game_info['hp'] += 1
+        reply_keyboard = [['Расплатиться', 'Убежать']]
+        update.message.reply_text('Трактирщик требует денег',
+                                  reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+        return S
+    if update.message.text == 'Спросить про подработку':
+        logger.info(f'{user.first_name} выбрал "Спросить про подработку"')
+        update.message.reply_text('Трактирщик позвал за собой. Вам предстоит средневековое собеседование.')
+        reply_keyboard = [['Усердно драить котёл', 'Налить туда воды и молиться']]
+        update.message.reply_text('Трактирщик указал на огромный грязный котёл посреди кухни. Его надо отмыть.',
+                                  reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+        return Q
+
+
+def plata(update, context):
+    user = update.message.from_user
+    if update.message.text == 'Расплатиться':
+        logger.info(f'{user.first_name} выбрал "Расплатиться"')
+        update.message.reply_text('Кажется, у вас и денег то нет. Трактирщик разозлился и поколотил вас дубиной. \n'
+                                  '(у вас отнимается одно хп)')
+        user_game_info['hp'] -= 1
+        if user_game_info['hp'] <= 0:
+            reply_keyboard = [['Продолжить']]
+            update.message.reply_text('Вы умерли и игра начнется заново.',
+                                      reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+            logger.info(f'{user.first_name} умер.')
+            return A
+    if update.message.text == 'Убежать':
+        logger.info(f'{user.first_name} выбрал "Убежать"')
+        update.message.reply_text('Вам удалось убежать')
+    reply_keyboard = [['Бежать со всех ног', 'Узнать, что эти господа делают в столь поздний час']]
+    update.message.reply_text('Вы возвращаетесь домой через лес. Внезапно перед вами появляются двое.',
+                              reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    return T
+
+
+def lydi(update, context):
+    user = update.message.from_user
+    if update.message.text == 'Бежать со всех ног':
+        logger.info(f'{user.first_name} выбрал "Бежать со всех ног"')
+        update.message.reply_text('Повернувшись назад для побега, вы обнаружили ещё двоих людей. Бежать не получится.')
+    if update.message.text == 'Узнать, что эти господа делают в столь поздний час':
+        logger.info(f'{user.first_name} выбрал "Узнать, что эти господа делают в столь поздний час"')
+        update.message.reply_text('Вы вежливо поинтересовались, кто эти господа. \n'
+                                  'Но на вас только подозрительно ухмыльнулись')
+    reply_keyboard = [['Достать всё, что есть', 'Изобразить юродивого']]
+    update.message.reply_text('Человек со шрамом достаёт кинжал и направляет его на вас. Деньги или жизнь?',
+                              reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    return U
+
+
+def urodivyi(update, context):
+    user = update.message.from_user
+    if update.message.text == 'Достать всё, что есть':
+        logger.info(f'{user.first_name} выбрал "Достать всё, что есть"')
+        update.message.reply_text('Вы опустошили карманы. Ничего там, конечно, не было. \n'
+                                  'На что эти бандиты рассчитывали?')
+    if update.message.text == 'Изобразить юродивого':
+        logger.info(f'{user.first_name} выбрал "Изобразить юродивого"')
+    update.message.reply_text('Вы стали нести окалесицу, но это не помешало бандитам обыскать вас.')
+    reply_keyboard = [['Пойти дальше', 'Вернуться']]
+    update.message.reply_text('Человек со шрамом: "А ты не так прост как кажешься. Мы с тобой ещё увидимся".',
+                              reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    return V
+
+
+def derevnya(update, context):
+    user = update.message.from_user
+    if update.message.text == 'Пойти дальше':
+        logger.info(f'{user.first_name} выбрал "Пойти дальше"')
+        update.message.reply_text('Вы не знаете куда пойти и возвращаетесь обратно в деревню.')
+    if update.message.text == 'Вернуться':
+        logger.info(f'{user.first_name} выбрал "Вернуться"')
+        update.message.reply_text('Вы решили вернуться обратно в деревню.')
+    reply_keyboard = [['Взять деньги']]
+    update.message.reply_text('Пока вы шли до дома вы нашли пару золотых монет на земле.',
+                              reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    return W
+
+
+def bandits(update, context):
+    user = update.message.from_user
+    reply_keyboard = [['Отказаться', 'Идти']]
+    update.message.reply_text('Вас встретил посланец из банды и требует пойти с ним.',
+                              reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    """Если пойти с ними то заберут деньги а если отказаться то побьют => минус 1 хп и деньги"""
+    """Если что я тебе потом напишу что делать или сам продолжу"""
+    return X
+
+
+
+def work(update, context):
+    user = update.message.from_user
+    if update.message.text == 'Усердно драить котёл':
+        logger.info(f'{user.first_name} выбрал "Усердно драить котёл"')
+        update.message.reply_text('Вы ободрали руки в кровь. Хорошо, что ничем не заразились.\n'
+                                  ' (у вас отнимается одно хп)')
+        user_game_info['hp'] -= 1
+        if user_game_info['hp'] <= 0:
+            reply_keyboard = [['Продолжить']]
+            update.message.reply_text('Вы умерли и игра начнется заново.',
+                                      reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+            logger.info(f'{user.first_name} умер.')
+            return A
+    if update.message.text == 'Налить туда воды и молиться':
+        update.message.reply_text('Вы налили воды в котёл. Но зачем?')
+    reply_keyboard = [['Драить котёл', 'Попросить другую работу']]
+    update.message.reply_text('Котёл всё ещё грязный.',
+                              reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    return R
+
+
+def cotel(update, context):
+    user = update.message.from_user
+    if update.message.text == 'Драить котёл':
+        logger.info(f'{user.first_name} выбрал "Драить котёл"')
+        reply_keyboard = [['Драить котёл', 'Попросить другую работу']]
+        update.message.reply_text('Грязь стала отходить! Трактирщику понравился чистый котёл, он дал вам\n'
+                                  ' немного денег и вы ушли.',
+                                  reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    return W
 
 
 def cancel(update, context):
@@ -337,7 +511,18 @@ def main():
                 J: [MessageHandler(Filters.text, chel)],
                 K: [MessageHandler(Filters.text, scotina)],
                 L: [MessageHandler(Filters.text, batya_i_voyna)],
-                M: ['''Напиши дальше историю я пока отдыхаю''']
+                M: [MessageHandler(Filters.text, traktir)],
+                N: [MessageHandler(Filters.text, utopec)],
+                O: [MessageHandler(Filters.text, v_traktire)],
+                P: [MessageHandler(Filters.text, food_or_work)],
+                Q: [MessageHandler(Filters.text, work)],
+                R: [MessageHandler(Filters.text, cotel)],
+                S: [MessageHandler(Filters.text, plata)],
+                T: [MessageHandler(Filters.text, lydi)],
+                U: [MessageHandler(Filters.text, urodivyi)],
+                V: [MessageHandler(Filters.text, derevnya)],
+                W: [MessageHandler(Filters.text, bandits)],
+                X: ["""Продолжение следует..."""]
                 },
         fallbacks=[CommandHandler('cancel', cancel)]
 
