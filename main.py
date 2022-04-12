@@ -8,7 +8,7 @@ from telegram.ext import Updater, ConversationHandler, CommandHandler, MessageHa
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-GEN, AGE, REG, A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X= range(27)
+GEN, AGE, REG, A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z = range(29)
 
 user_game_info = {'f': True, 'hp': 3}
 
@@ -289,8 +289,8 @@ def batya_i_voyna(update, context):
     if update.message.text == 'Пускай гуляют':
         logger.info(f'{user.first_name} выбрал "Пускай гуляют"')
         update.message.reply_text('Вашу скотну заметил Лорд. Вашего отца оштрафовали. Теперь ваша семья нищая.')
-    elif update.message.text == 'Махать палкой чтобы шла обратно':
-        logger.info(f'{user.first_name} выбрал "Махать палкой чтобы шла обратно"')
+    elif update.message.text == 'Махать палкой, чтобы шла обратно':
+        logger.info(f'{user.first_name} выбрал "Махать палкой, чтобы шла обратно"')
         update.message.reply_text(
             'Ваша скотина лениво пошла, помяв вас при этом. Зато вы не потревожили Лорда.(у вас отнимается одно хп)')
         user_game_info['hp'] -= 1
@@ -416,7 +416,7 @@ def urodivyi(update, context):
                                   'На что эти бандиты рассчитывали?')
     if update.message.text == 'Изобразить юродивого':
         logger.info(f'{user.first_name} выбрал "Изобразить юродивого"')
-    update.message.reply_text('Вы стали нести окалесицу, но это не помешало бандитам обыскать вас.')
+        update.message.reply_text('Вы стали нести окалесицу, но это не помешало бандитам обыскать вас.')
     reply_keyboard = [['Пойти дальше', 'Вернуться']]
     update.message.reply_text('Человек со шрамом: "А ты не так прост как кажешься. Мы с тобой ещё увидимся".',
                               reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
@@ -442,8 +442,6 @@ def bandits(update, context):
     reply_keyboard = [['Отказаться', 'Идти']]
     update.message.reply_text('Вас встретил посланец из банды и требует пойти с ним.',
                               reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
-    """Если пойти с ними то заберут деньги а если отказаться то побьют => минус 1 хп и деньги"""
-    """Если что я тебе потом напишу что делать или сам продолжу"""
     return X
 
 
@@ -474,10 +472,48 @@ def cotel(update, context):
     if update.message.text == 'Драить котёл':
         logger.info(f'{user.first_name} выбрал "Драить котёл"')
         reply_keyboard = [['Драить котёл', 'Попросить другую работу']]
-        update.message.reply_text('Грязь стала отходить! Трактирщику понравился чистый котёл, он дал вам\n'
-                                  ' немного денег и вы ушли.',
+        update.message.reply_text('Грязь стала отходить! Трактирщику понравился чистый котёл, он дал вам'
+                                  'немного денег и вы ушли.',
                                   reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
     return W
+
+
+def bandits_2(update, context):
+        user = update.message.from_user
+        if update.message.text == 'Отказаться':
+            logger.info(f'{user.first_name} выбрал "Отказаться"')
+            update.message.reply_text('На следующий день вас подстерегли бандиты и забрали всё, что у вас  было.'
+                                      ' Бандиты не прощают измены. (у вас отнимается одно хп)')
+            user_game_info['hp'] -= 1
+            if user_game_info['hp'] <= 0:
+                reply_keyboard = [['Продолжить']]
+                update.message.reply_text('Вы умерли и игра начнется заново.',
+                                          reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+                logger.info(f'{user.first_name} умер.')
+                return A
+        if update.message.text == 'Идти':
+            logger.info(f'{user.first_name} выбрал "Идти"')
+            update.message.reply_text('Вы неохотно согласились пойти с бандитами.'
+                                      'Они вывели вас в лес и обобрали до нитки.'
+                                      'Теперь у вас ничего нет.')
+        reply_keyboard = [['Просить милостыню', 'Шататься по деревне']]
+        update.message.reply_text('Вы в отчаянии, хотите есть, и у вас нет денег.',
+                                  reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+        return Y
+
+
+def milostynya(update, context):
+    user = update.message.from_user
+    if update.message.text == 'Просить милостыню':
+        logger.info(f'{user.first_name} выбрал "Просить милостыню"')
+        update.message.reply_text('Вокруг только бедные крестьяне. Ни у кого нет денег вам на пожертвования.')
+    if update.message.text == 'Шататься по деревне':
+        logger.info(f'{user.first_name} выбрал "Шататься по деревне"')
+        update.message.reply_text('Ваш живот урчит на всю деревню.')
+    reply_keyboard = [['Идти в кузню']]
+    update.message.reply_text('Пока вы ходили по деревне вы услышали, что в кузне нужны рабочие.',
+                              reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    return Z
 
 
 def cancel(update, context):
@@ -522,7 +558,10 @@ def main():
                 U: [MessageHandler(Filters.text, urodivyi)],
                 V: [MessageHandler(Filters.text, derevnya)],
                 W: [MessageHandler(Filters.text, bandits)],
-                X: ["""Продолжение следует..."""]
+                X: [MessageHandler(Filters.text, bandits_2)],
+                Y: [MessageHandler(Filters.text, milostynya)],
+                Z: ["""Продолжение следует..."""],
+
                 },
         fallbacks=[CommandHandler('cancel', cancel)]
 
