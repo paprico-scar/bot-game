@@ -3,17 +3,25 @@ import sqlite3
 import pretty_errors
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
 from telegram.ext import Updater, ConversationHandler, CommandHandler, MessageHandler, Filters
+from requests import get
+import random
 
 # логгинг
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-GEN, AGE, REG, A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z, ZA, ZB, ZC,\
+GEN, AGE, REG, A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z, ZA, ZB, ZC, \
 ZD, ZE, ZF, ZG, ZH, ZI, ZJA, ZJB, ZK, ZL, ZM, ZNA, ZNB, ZNC, ZND, ZO = range(48)
 
 user_game_info = {'f': True, 'hp': 3, 'predmet': ''}
 rabota_y_kyzneca = {'1': '', '2': ''}
 dict_user = {'name': '', 'gender': '', 'age': '', 'region': ''}
+
+
+def request_api_fotki(update, context):
+    id_ = update.message.chat.id
+    file = get('https://api.thecatapi.com/v1/images/search').json()
+    context.bot.send_photo(chat_id=id_, photo=file[0]['url'])
 
 
 def start(update, context):
@@ -47,6 +55,7 @@ def gender(update, context):
     user = update.message.from_user
     logger.info(f'Пол пользователя {user.first_name}: {update.message.text}.')
     dict_user['gender'] = update.message.text
+
     update.message.reply_text(
         'Хорошо! А теперь скажи пожалуйста сколько тебе лет',
         reply_markup=ReplyKeyboardRemove()
@@ -161,6 +170,8 @@ def next(update, context):
         update.message.reply_text('Услышав это, отец в ярости поколотил вас.(у вас отнимается одно хп)')
         user_game_info['hp'] -= 1
         logger.info(f'{user.first_name} выбрал "Повторить за отцом".')
+    if random.random():
+        request_api_fotki(update, context)
     update.message.reply_text('Проходит какое-то время и вы уже обедаете за столом вместе со всеми.')
     reply_keyboard = [['Съесть свою порцию', "Отобрать у брата"]]
     update.message.reply_text('Так как вы живёте в очень большой семье еды вам достаётся не очень много.',
@@ -264,6 +275,8 @@ def chel(update, context):
                                   reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
         logger.info(f'{user.first_name} умер.')
         return A
+    if random.random():
+        request_api_fotki(update, context)
     reply_keyboard = [['Подойти и заговорить', 'Рассказать взырослым']]
     update.message.reply_text('Работая на поле, вы замечаете странного человека, который смотрит за вами.',
                               reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
@@ -395,6 +408,8 @@ def plata(update, context):
     if update.message.text == 'Убежать':
         logger.info(f'{user.first_name} выбрал "Убежать"')
         update.message.reply_text('Вам удалось убежать')
+    if random.random():
+        request_api_fotki(update, context)
     reply_keyboard = [['Бежать со всех ног', 'Узнать, что эти господа делают в столь поздний час']]
     update.message.reply_text('Вы возвращаетесь домой через лес. Внезапно перед вами появляются двое.',
                               reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
@@ -442,6 +457,8 @@ def derevnya(update, context):
     if update.message.text == 'Вернуться':
         logger.info(f'{user.first_name} выбрал "Вернуться"')
         update.message.reply_text('Вы решили вернуться обратно в деревню.')
+    if random.random():
+        request_api_fotki(update, context)
     reply_keyboard = [['Взять деньги']]
     update.message.reply_text('Пока вы шли до дома вы нашли пару золотых монет на земле.',
                               reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
@@ -506,6 +523,8 @@ def bandits_2(update, context):
         update.message.reply_text('Вы неохотно согласились пойти с бандитами.'
                                   'Они вывели вас в лес и обобрали до нитки.'
                                   'Теперь у вас ничего нет.')
+    if random.random():
+        request_api_fotki(update, context)
     reply_keyboard = [['Просить милостыню', 'Шататься по деревне']]
     update.message.reply_text('Вы в отчаянии, хотите есть, и у вас нет денег.',
                               reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
@@ -545,6 +564,8 @@ def kyznya_2(update, context):
         logger.info(f'{user.first_name} выбрал "Выбрать практику"')
         update.message.reply_text('Вы предпочли работать руками, а не головой.')
     reply_keyboard = [['Таскать по одной'], ['Схватить все сразу']]
+    if random.random():
+        request_api_fotki(update, context)
     update.message.reply_text('Задание от кузнеца - перетаскать все заготовки.',
                               reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
     return ZB
@@ -613,6 +634,8 @@ def cherez_god(update, context):
     user_game_info['hp'] = 3
     user = update.message.from_user
     logger.info(f'{user.first_name} дошел до ЧЕКПОИНТА.')
+    if random.random():
+        request_api_fotki(update, context)
     reply_keyboard = [['Отдыхать'], ['Взять серьёзный заказ']]
     update.message.reply_text(
         'Вы отработали у кузнеца уже год и зп это время многому научились.',
@@ -663,6 +686,8 @@ def za_raboty_2(update, context):
             'Вы обстучали клинок по краям. Вам показалось, что получилось'
             ' оригинально.(Получен предмет странный клинок)')
         rabota_y_kyzneca['1'] = 'Странный клинок'
+    if random.random():
+        request_api_fotki(update, context)
     reply_keyboard = [['Опустить клинок целиком'], ['Опускатьь по чуть-чуть']]
     update.message.reply_text('Пришло время закалить клинок в воде.',
                               reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
@@ -755,6 +780,8 @@ def chto_c_chelom(update, context):
                                   reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
         logger.info(f'{user.first_name} умер.')
         return ZE
+    if random.random():
+        request_api_fotki(update, context)
     reply_keyboard = [['Вбежать внутрь'], ['Позвать напомощь']]
     update.message.reply_text('Пока вы были в деревне, в кузне начался пожар. Кажется кузнец всё ещё внутри.',
                               reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
@@ -825,6 +852,8 @@ def zakaz_ot_korolya_3(update, context):
     elif update.message.text == 'Справимся сами':
         logger.info(f'{user.first_name} выбрал "Справимся сами"')
         update.message.reply_text('У вас и у кузнеца появился упорный дух и вы увеличили выработку втрое.')
+    if random.random():
+        request_api_fotki(update, context)
     reply_keyboard = [['Попросить награду'], ['Попросить пропуск в город']]
     update.message.reply_text('Гонец забрал заказ.',
                               reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
