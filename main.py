@@ -8,11 +8,11 @@ from telegram.ext import Updater, ConversationHandler, CommandHandler, MessageHa
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-GEN, AGE, REG, A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z, ZA, ZB, ZC, ZD, ZE, ZF\
-    = range(35)
+GEN, AGE, REG, A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z, ZA, ZB, ZC,\
+ZD, ZE, ZF, ZG, ZH, ZI, ZJA, ZJB, ZK, ZL, ZM, ZNA, ZNB, ZNC, ZND, ZO = range(48)
 
 user_game_info = {'f': True, 'hp': 3, 'predmet': ''}
-
+rabota_y_kyzneca = {'1': '', '2': ''}
 dict_user = {'name': '', 'gender': '', 'age': '', 'region': ''}
 
 
@@ -541,7 +541,7 @@ def kyznya_2(update, context):
     if update.message.text == 'Выбрать теорию':
         logger.info(f'{user.first_name} выбрал "Выбрать теорию"')
         update.message.reply_text('Вы предпочли основательно подготовиться для работы.')
-    elif update.message.reply_text == 'Выбрать практику':
+    elif update.message.text == 'Выбрать практику':
         logger.info(f'{user.first_name} выбрал "Выбрать практику"')
         update.message.reply_text('Вы предпочли работать руками, а не головой.')
     reply_keyboard = [['Таскать по одной'], ['Схватить все сразу']]
@@ -555,7 +555,7 @@ def kyznya_3(update, context):
     if update.message.text == 'Таскать по одной':
         logger.info(f'{user.first_name} выбрал "Таскать по одной"')
         update.message.reply_text('Вы перенесли все заготовки, но потратили на это много времени.')
-    elif update.message.reply_text == 'Схватить все сразу':
+    elif update.message.text == 'Схватить все сразу':
         logger.info(f'{user.first_name} выбрал "Схватить все сразу"')
         update.message.reply_text(
             'Вы схватили все сразу и кое-как перенесли. На селдующий день у вас болела спина.(у вас отнимается одно хп)')
@@ -577,7 +577,7 @@ def kyznya_4(update, context):
     if update.message.text == 'Раздувать быстро':
         logger.info(f'{user.first_name} выбрал "Раздувать быстро"')
         update.message.reply_text('Вы отлично раздули горн. Кузнец васми доволен.')
-    elif update.message.reply_text == 'Раздувать медленно':
+    elif update.message.text == 'Раздувать медленно':
         logger.info(f'{user.first_name} выбрал "Раздувать медленно"')
         update.message.reply_text(
             'Вы не смогли раздуть горн. Кузнец ударил вас по кумполу.(у вас отнимается одно хп)')
@@ -599,9 +599,9 @@ def kyznya_5_chekpoint(update, context):
     if update.message.text == 'Подать попепечный':
         logger.info(f'{user.first_name} выбрал "Подать попепечный"')
         update.message.reply_text('Вы дали ему нкжный молот.')
-    elif update.message.reply_text == 'Подать обычный':
+    elif update.message.text == 'Подать обычный':
         logger.info(f'{user.first_name} выбрал "Подать обычный"')
-        update.message.reply_text('Кузнец разозлился и сам взял нкжный молоток.')
+        update.message.reply_text('Кузнец разозлился и сам взял нужный молоток.')
     reply_keyboard = [['Следующая глаава']]
     update.message.reply_text(
         'Кузнец взял вас в подмостерье. Оказалось, что другие кандидаты вообще никуда не годились.(ЧЕКПОИНТ)',
@@ -610,6 +610,7 @@ def kyznya_5_chekpoint(update, context):
 
 
 def cherez_god(update, context):
+    user_game_info['hp'] = 3
     user = update.message.from_user
     logger.info(f'{user.first_name} дошел до ЧЕКПОИНТА.')
     reply_keyboard = [['Отдыхать'], ['Взять серьёзный заказ']]
@@ -617,6 +618,240 @@ def cherez_god(update, context):
         'Вы отработали у кузнеца уже год и зп это время многому научились.',
         reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
     return ZF
+
+
+def zakaz(update, context):
+    user = update.message.from_user
+    if update.message.text == 'Отдыхать':
+        logger.info(f'{user.first_name} выбрал "Отдыхать"')
+        update.message.reply_text('Через минуту зашёл кузнец и сказал что вас ждет серьёзный заказ.')
+    elif update.message.text == 'Взять серьёзный заказ':
+        logger.info(f'{user.first_name} выбрал "Взять серьёзный заказ"')
+        update.message.reply_text('Вы просите у кузнеца дать вам серьёзную работу и он соглашается.')
+    reply_keyboard = [['Подготовиться'], ['Звяться за молот']]
+    update.message.reply_text('Рыцарь заказал полуторный меч. Кузнец поручил это дело вам.',
+                              reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    return ZG
+
+
+def za_raboty_1(update, context):
+    user = update.message.from_user
+    if update.message.text == 'Подготовиться':
+        logger.info(f'{user.first_name} выбрал "Подготовиться"')
+        update.message.reply_text('Вы долго расспрашивали кузнеца про технологии ковки. Всё что вы '
+                                  'запомнили это равномерное сечение и резкая закалка.')
+    elif update.message.text == 'Звяться за молот':
+        logger.info(f'{user.first_name} выбрал "Звяться за молот"')
+        update.message.reply_text('Вы приняли решение не подготавливаться и сразу взялись за работу.')
+    reply_keyboard = [['Проковать вдоль протяженности'], ['Постукивать только по краям']]
+    update.message.reply_text('Итак, вы разогрели заготовку.Как бкдете формировать клинок.',
+                              reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    return ZH
+
+
+def za_raboty_2(update, context):
+    user = update.message.from_user
+    if update.message.text == 'Проковать вдоль протяженности':
+        logger.info(f'{user.first_name} выбрал "Проковать вдоль протяженности"')
+        update.message.reply_text(
+            'Вы обстучали клинок равномерно по всей площади и у вас вышел'
+            ' добротный меч.(Получен предмет обычный клинок)')
+        rabota_y_kyzneca['1'] = 'Обычный клинок'
+    elif update.message.text == 'Постукивать только по краям':
+        logger.info(f'{user.first_name} выбрал "Постукивать только по краям"')
+        update.message.reply_text(
+            'Вы обстучали клинок по краям. Вам показалось, что получилось'
+            ' оригинально.(Получен предмет странный клинок)')
+        rabota_y_kyzneca['1'] = 'Странный клинок'
+    reply_keyboard = [['Опустить клинок целиком'], ['Опускатьь по чуть-чуть']]
+    update.message.reply_text('Пришло время закалить клинок в воде.',
+                              reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    return ZI
+
+
+def za_raboty_3(update, context):
+    user = update.message.from_user
+    if update.message.text == 'Опустить клинок целиком':
+        logger.info(f'{user.first_name} выбрал "Опустить клинок целиком"')
+        if rabota_y_kyzneca['1'] == 'Обычный клинок':
+            update.message.reply_text('Ваш обычный клтнок превратился в что-то непонятное')
+        elif rabota_y_kyzneca['1'] == 'Странный клинок':
+            update.message.reply_text('Вы резко опустили клинок в воду. Сталь закалилась, но вид у клинка был ужасным')
+        rabota_y_kyzneca['2'] = 'плохо'
+    elif update.message.text == 'Опускатьь по чуть-чуть':
+        logger.info(f'{user.first_name} выбрал "Опускатьь по чуть-чуть"')
+        if rabota_y_kyzneca['1'] == 'Обычный клинок':
+            update.message.reply_text(
+                'Достав меч из воды, вы увидили прекрасную работу. Осталось только отдать заказчику.')
+        elif rabota_y_kyzneca['1'] == 'Странный клинок':
+            update.message.reply_text(
+                'Вы сделали все верно и на выходе у вас получилось оригинальный и хороший клинок.')
+        rabota_y_kyzneca['2'] = 'отлично'
+
+    if rabota_y_kyzneca['2'] == 'плохо':
+        reply_keyboard = [['Сказать кузнецу, что заказ готов'], ['Сказать, что запороли заказ']]
+        update.message.reply_text('Вы завернул свой шедевр в ткань и готовы отдать свой заказ.',
+                                  reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+        return ZJA
+    elif rabota_y_kyzneca['2'] == 'отлично':
+        reply_keyboard = [['Отдать заказ']]
+        update.message.reply_text('Вы завернул свой шедевр в ткань и готовы отдать свой заказ.',
+                                  reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+        return ZJB
+
+
+def za_raboty_final_a(update, context):
+    user = update.message.from_user
+    if update.message.text == 'Сказать кузнецу, что заказ готов':
+        logger.info(f'{user.first_name} выбрал "Сказать кузнецу, что заказ готов"')
+        update.message.reply_text('Увидев то что вы сделали, кузнец вас побил и переделал заказ.')
+    elif update.message.text == 'Сказать, что запороли заказ':
+        logger.info(f'{user.first_name} выбрал "Сказать, что запороли заказ"')
+        update.message.reply_text(
+            'Кузнец похвалил вас за честность, правда меч пришлось перековать и вы остались без оплаты.')
+    reply_keyboard = [['Попасть в город'], ['Работать дальше']]
+    update.message.reply_text('Дела в кузнице идут на лад! Вам поступают заказы на оружие и доспехи.',
+                              reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    return ZK
+
+
+def za_raboty_final_b(update, context):
+    user = update.message.from_user
+    logger.info(f'{user.first_name} выбрал "Отдать заказ"')
+    update.message.reply_text('Кузнец похвалил вас за проделанную работу и отдал вам то, что вы заработали')
+    reply_keyboard = [['Попасть в город'], ['Работать дальше']]
+    update.message.reply_text('Дела в кузнице идут на лад! Вам поступают заказы на оружие и доспехи.',
+                              reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    return ZK
+
+
+def snova_novy_chel(update, context):
+    user = update.message.from_user
+    if update.message.text == 'Попасть в город':
+        logger.info(f'{user.first_name} выбрал "Попасть в город"')
+        update.message.reply_text('Кузнец даст вам пропуск в город, когда вы отработаете пять лет.')
+    elif update.message.text == 'Работать дальше':
+        logger.info(f'{user.first_name} выбрал "Работать дальше"')
+        update.message.reply_text('Вы со спокойной душой продолжили работать в кузнице.')
+    reply_keyboard = [['Бежать'], ['Остановиться']]
+    update.message.reply_text('Вы брели по деревне как вдруг вас окликнул незнакомец.',
+                              reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    return ZL
+
+
+def chto_c_chelom(update, context):
+    user = update.message.from_user
+    if update.message.text == 'Бежать':
+        logger.info(f'{user.first_name} выбрал "Бежать"')
+        update.message.reply_text(
+            'Вы решили бежать со всех ног но незнакомец кинул вам камнем вслед.(у вас отнимается одно хп)')
+        user_game_info['hp'] -= 1
+    elif update.message.text == 'Остановиться':
+        logger.info(f'{user.first_name} выбрал "Остановиться"')
+        update.message.reply_text('Данный мистер спросил как пройти в трактир.')
+    if user_game_info['hp'] <= 0:
+        reply_keyboard = [['Продолжить']]
+        update.message.reply_text('Вы умерли и игра начнется заново.',
+                                  reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+        logger.info(f'{user.first_name} умер.')
+        return ZE
+    reply_keyboard = [['Вбежать внутрь'], ['Позвать напомощь']]
+    update.message.reply_text('Пока вы были в деревне, в кузне начался пожар. Кажется кузнец всё ещё внутри.',
+                              reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    return ZM
+
+
+def poshar(update, context):
+    user = update.message.from_user
+    if update.message.text == 'Вбежать внутрь':
+        logger.info(f'{user.first_name} выбрал "Вбежать внутрь"')
+        update.message.reply_text(
+            'Вы вбежали внутрь и спасли дрыхнущего кузнеца. Правда, вы получили ожоги.(у вас отнимается одно хп)')
+        user_game_info['hp'] -= 1
+    elif update.message.text == 'Позвать напомощь':
+        logger.info(f'{user.first_name} выбрал "Позвать напомощь"')
+        update.message.reply_text(
+            'Вы позвали напомощь и вдруг из кузни вырывается еле живой кузнец. Вскоре он поправился.')
+    if user_game_info['hp'] <= 0:
+        reply_keyboard = [['Продолжить']]
+        update.message.reply_text('Вы умерли и игра начнется заново.',
+                                  reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+        logger.info(f'{user.first_name} умер.')
+        return ZE
+    reply_keyboard = [['Согласиться']]
+    update.message.reply_text('От короля пришел гонец с заказом на вооружение королевского войска.',
+                              reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    return ZNA
+
+
+def zakaz_ot_korolya_1(update, context):
+    user = update.message.from_user
+    logger.info(f'{user.first_name} выбрал "Согласиться"')
+    update.message.reply_text('Вы с радостью согласились!')
+    reply_keyboard = [['Работать днем и ночью'], ['Распределить обязанности']]
+    update.message.reply_text('Вы получили список оружия. В нём более сотни мечей разных видов.',
+                              reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    return ZNB
+
+
+def zakaz_ot_korolya_2(update, context):
+    user = update.message.from_user
+    if update.message.text == 'Работать днем и ночью':
+        logger.info(f'{user.first_name} выбрал "Работать днем и ночью"')
+        update.message.reply_text(
+            'Вы решили работать с кузнецом и днем и ночью и принялись за работу.(у вас отнимается одно хп)')
+        user_game_info['hp'] -= 1
+    elif update.message.text == 'Распределить обязанности':
+        logger.info(f'{user.first_name} выбрал "Распределить обязанности"')
+        update.message.reply_text('Вы распределили обязанности с кузнецом и планомерно принялись за работу.')
+    if user_game_info['hp'] <= 0:
+        reply_keyboard = [['Продолжить']]
+        update.message.reply_text('Вы умерли и игра начнется заново.',
+                                  reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+        logger.info(f'{user.first_name} умер.')
+        return ZE
+    reply_keyboard = [['Нанять ёще людей'], ['Справимся сами']]
+    update.message.reply_text('Вы не выполнили даже четверть заказа, а срок пожходит к концу.',
+                              reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    return ZNC
+
+
+def zakaz_ot_korolya_3(update, context):
+    user = update.message.from_user
+    if update.message.text == 'Нанять ёще людей':
+        logger.info(f'{user.first_name} выбрал "Нанять ёще людей"')
+        update.message.reply_text(
+            'Вы наняли несколько рабочих и выработка увеличилачь втрое.')
+    elif update.message.text == 'Справимся сами':
+        logger.info(f'{user.first_name} выбрал "Справимся сами"')
+        update.message.reply_text('У вас и у кузнеца появился упорный дух и вы увеличили выработку втрое.')
+    reply_keyboard = [['Попросить награду'], ['Попросить пропуск в город']]
+    update.message.reply_text('Гонец забрал заказ.',
+                              reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    return ZND
+
+
+def zakaz_ot_korolya_4(update, context):
+    user = update.message.from_user
+    if update.message.text == 'Попросить награду':
+        logger.info(f'{user.first_name} выбрал "Попросить награду"')
+        update.message.reply_text(
+            'За вашу работу кузнец дал вам пропуск.')
+    elif update.message.text == 'Попросить пропуск в город':
+        logger.info(f'{user.first_name} выбрал "Попросить пропуск в город"')
+        update.message.reply_text(
+            'Вместо оплаты гонец дает вам пропуск. Видели бы вы лицо кузнеца, работавшего несколько недель напролет')
+    reply_keyboard = [['В город']]
+    update.message.reply_text('Вы решии сразу же отправиться в грод.',
+                              reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    return ZO
+
+
+def gorod(update, context):
+    user = update.message.from_user
+    logger.info(f'{user.first_name} дошел до ЧЕКПОИНТА.')
+    update.message.reply_text('Вы с легкостью прошли в город')
+    '''продолжение'''
 
 
 def cancel(update, context):
@@ -669,7 +904,20 @@ def main():
                 ZC: [MessageHandler(Filters.text, kyznya_4)],
                 ZD: [MessageHandler(Filters.text, kyznya_5_chekpoint)],
                 ZE: [MessageHandler(Filters.text, cherez_god)],
-                ZF: ['''ПРОДОЛЖЕНИЕ СЛЕДУЕЕЕЕЕТ''']
+                ZF: [MessageHandler(Filters.text, zakaz)],
+                ZG: [MessageHandler(Filters.text, za_raboty_1)],
+                ZH: [MessageHandler(Filters.text, za_raboty_2)],
+                ZI: [MessageHandler(Filters.text, za_raboty_3)],
+                ZJA: [MessageHandler(Filters.text, za_raboty_final_a)],
+                ZJB: [MessageHandler(Filters.text, za_raboty_final_b)],
+                ZK: [MessageHandler(Filters.text, snova_novy_chel)],
+                ZL: [MessageHandler(Filters.text, chto_c_chelom)],
+                ZM: [MessageHandler(Filters.text, poshar)],
+                ZNA: [MessageHandler(Filters.text, zakaz_ot_korolya_1)],
+                ZNB: [MessageHandler(Filters.text, zakaz_ot_korolya_2)],
+                ZNC: [MessageHandler(Filters.text, zakaz_ot_korolya_3)],
+                ZND: [MessageHandler(Filters.text, zakaz_ot_korolya_4)],
+                ZO: [MessageHandler(Filters.text, gorod)]
                 },
         fallbacks=[CommandHandler('cancel', cancel)]
 
