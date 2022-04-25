@@ -37,10 +37,12 @@ def start(update, context):
     dict_user['name'] = user.first_name
     reply_keyboard = [['Mужчина', 'Женщина', 'Другое']]
     update.message.reply_text(
-        'Привет, меня зовут Арханвей. Я бот который будет играть\n'
-        'с тобой в игру. Ты погрузишься в средневековье, где\n'
-        'будут замки, рыцари и драконы. Но для начала\n'
-        'я задам тебе пару вопросов.\n\n'
+        'Привет, меня зовут Арханвей. Я бот который будет играть '
+        'с тобой в игру. Ты погрузишься в средневековье, где '
+        'будут замки, рыцари и драконы. В течение всего повествования будет нескольлко моментов, '
+        'когда у я буду отправлять вам некоторые милые фотографии). '
+        'Но для начала давайте познакомимся а потом приступим к игре. Я задам вам пару вопросов. '
+        '\n\n'
         'Какой у тебя пол?',
         reply_markup=ReplyKeyboardMarkup(
             reply_keyboard, one_time_keyboard=True,
@@ -561,6 +563,7 @@ def eda_v_lesy(update, context):
     update.message.reply_text('Вы пошли в кузьню через лес, надеясь найти еду.',
                               reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
     return AC
+
 
 def yagoda(update, context):
     user = update.message.from_user
