@@ -600,7 +600,9 @@ def kyznya_2(update, context):
     if update.message.text == 'Выбрать теорию':
         logger.info(f'{user.first_name} выбрал "Выбрать теорию"')
         update.message.reply_text('Кузнец задаёт вопрос.')
-        update.message.reply_text('Когда нужно ковать железо?')
+        reply_keyboard = [['Пока горячо'], ['Когда угодно']]
+        update.message.reply_text('Когда нужно ковать железо?',
+                                  reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
         return AD
     elif update.message.text == 'Выбрать практику':
         logger.info(f'{user.first_name} выбрал "Выбрать практику"')
